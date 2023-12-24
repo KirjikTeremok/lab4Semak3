@@ -102,9 +102,9 @@ namespace lab4Semak3
                     {
                         this.Invoke(new Action(() =>
                         {
-                            Form1.D_ = Convert.ToBase64String(Encoding.UTF8.GetBytes(textBox7.Text));
-                            Form1.E_ = Convert.ToBase64String(Encoding.UTF8.GetBytes(textBox6.Text));
-                            Form1.F_ = Convert.ToBase64String(Encoding.UTF8.GetBytes(textBox8.Text));
+                            D_ = Convert.ToBase64String(Encoding.UTF8.GetBytes(textBox7.Text));
+                            E_ = Convert.ToBase64String(Encoding.UTF8.GetBytes(textBox6.Text));
+                            F_ = Convert.ToBase64String(Encoding.UTF8.GetBytes(textBox8.Text));
 
                             JsonCommand c = new JsonCommand() {D = Form1.D_, E = Form1.E_, F = Form1.F_};
                             cjson = JsonSerializer.Serialize<JsonCommand>(c);
@@ -119,14 +119,25 @@ namespace lab4Semak3
                             textBox5.Text = Encoding.ASCII.GetString(Convert.FromBase64String(jc.C));
                             count++;
                             
+                           
                         }));
                     }
-
                     string responseString = cjson;
-                    byte[] buffer = Encoding.UTF8.GetBytes(responseString);
+                    byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
                     Stream output = response.OutputStream;
                     output.Write(buffer, 0, buffer.Length);
                     output.Close();
+                    
+                    string html = "<html><body><h1>Count: " + count + "</h1></body></html>";
+                    byte[] htmlBytes = Encoding.UTF8.GetBytes(html);
+
+                    response.ContentType = "text/html";
+                    response.ContentLength64 = htmlBytes.Length;
+
+                    Stream output2 = response.OutputStream;
+                    output2.Write(htmlBytes, 0, htmlBytes.Length);
+                    output2.Close();
+                    
                 }
                 catch
                 {
